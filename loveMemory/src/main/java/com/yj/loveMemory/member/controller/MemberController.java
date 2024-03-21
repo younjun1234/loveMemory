@@ -68,8 +68,15 @@ public class MemberController {
 		
 		// 예외 처리
 		int result = mService.signUp(m);
-		
+		if(result > 0) {
+			
+		} else {
+			if(!upload.getOriginalFilename().equals("")) {
+				deleteFile(m.getProfile());
+			}
+		}
 		return "redirect:/";
+		
 	}
 	
 	public String[] saveFile(MultipartFile file) {
@@ -103,4 +110,18 @@ public class MemberController {
 		return fileNames;
 	}
 
+	private void deleteFile(String fileName) {
+		String os = System.getProperty("os.name").toLowerCase();
+		String savePath = null;
+		if (os.contains("win")) {
+			savePath = "C:\\woolfy";
+		} else if(os.contains("mac")) {
+			savePath = "/Users/younjun/Desktop/WorkStation/uploadFiles/woofly/";
+		}
+		File f = new File(savePath + fileName);
+		if(f.exists()) {
+			f.delete();
+		}
+		
+	}
 }
