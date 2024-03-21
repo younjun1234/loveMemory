@@ -64,6 +64,8 @@ public class MemberController {
 			if(fileNames[1] != null) {
 				m.setProfile(fileNames[1]);
 			}
+		} else {
+			m.setProfile("default_profile.jpg");
 		}
 		
 		// 예외 처리
@@ -111,13 +113,8 @@ public class MemberController {
 	}
 
 	private void deleteFile(String fileName) {
-		String os = System.getProperty("os.name").toLowerCase();
 		String savePath = null;
-		if (os.contains("win")) {
-			savePath = "C:\\woolfy";
-		} else if(os.contains("mac")) {
-			savePath = "/Users/younjun/Desktop/WorkStation/uploadFiles/woofly/";
-		}
+		savePath = "/Users/younjun/Desktop/WorkStation/uploadFiles/woofly/";
 		File f = new File(savePath + fileName);
 		if(f.exists()) {
 			f.delete();

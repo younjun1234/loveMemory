@@ -1,4 +1,4 @@
-package com.yj.loveMemory.common;
+package com.yj.loveMemory.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
