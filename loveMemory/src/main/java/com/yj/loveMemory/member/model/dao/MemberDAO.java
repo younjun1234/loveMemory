@@ -9,4 +9,6 @@ public interface MemberDAO {
 
 	public Member login(Member m);
 
+	public int signUp(Member m);
+
 }

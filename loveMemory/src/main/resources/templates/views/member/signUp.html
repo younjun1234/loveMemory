@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th=http://www.thymeleaf.org>
+<head>
+<meta charset=UTF-8>
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="/signUp" method="post" enctype="multipart/form-data">
+		<h1>회원가입</h1>
+		<label for="mbId">아이디 : </label>
+		<input type="text" name="mbId" id="mbId"> <br><br>
+		
+		<label for="mbPwd">비밀번호 : </label>
+		<input type="password" name="mbPwd" id="mbPwd"> <br><br>
+		
+		<label for="checkPwd">비밀번호 확인 : </label>
+		<input type="password" name="checkPwd" id="checkPwd"> <br><br>
+		
+		<label for="mbNickName">닉네임 : </label>
+		<input type="text" name="mbNickName" id="mbNickName"> <br><br>
+		
+		<label for="birthday">생년월일 : </label>
+		<input type="date" name="birthday" id="birthday"> <br><br>
+		
+		<label for="profile">프로필 사진 : </label>
+		<input type="file" name="file" id="profile"> <br><br>
+		
+		<button>가입하기</button>
+	</form>
+</body>
+</html>
+

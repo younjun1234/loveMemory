@@ -7,5 +7,10 @@
 		from member
 		where mb_id = #{mbId} and mb_pwd = #{mbPwd}
 	</select>
+	
+	<insert id="signUp">
+		insert into member
+		values (#{mbId}, #{mbPwd}, #{mbNickName}, #{profile}, #{birthday})
+	</insert>
 </mapper>
 	
