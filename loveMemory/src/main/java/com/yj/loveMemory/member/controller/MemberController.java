@@ -18,26 +18,50 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yj.loveMemory.member.model.service.MemberService;
+import com.yj.loveMemory.member.model.vo.Couple;
 import com.yj.loveMemory.member.model.vo.Member;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@SessionAttributes("loginUser")
+@SessionAttributes({"loginUser", "partner", "couple"})
 public class MemberController {
 	
 	@Autowired
 	private MemberService mService;
 	
+	// 로그인 페이지 이동
 	@GetMapping("/loginView")
 	public String loginView() {
 		return "login";
 	}
 	
+	// 실제 로그인
 	@PostMapping("/logIn")
 	public String login(@ModelAttribute Member m, Model model) {
+		// 비밀번호 확인 spring security 적용 에정
 		Member loginUser = mService.login(m);
-		model.addAttribute("loginUser", loginUser);
+		if(loginUser != null) {
+			model.addAttribute("loginUser", loginUser);
+			Couple couple = mService.getCouple(loginUser);
+			System.out.println(couple);
+			
+			// 연인 정보 가져오기
+			Member partner;
+			if(couple.getMbId1().equals(loginUser.getMbId())) {
+				partner = mService.getPartner(couple.getMbId2());
+				
+			} else {
+				partner = mService.getPartner(couple.getMbId1());
+			}
+			if(partner != null) {
+				model.addAttribute("partner", partner);
+			}
+			System.out.println(partner);
+		}
+		
+		// 연인 프로필 가져오기
+		
 		return "redirect:/";
 	}
 	

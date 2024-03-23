@@ -8,6 +8,18 @@
 		where mb_id = #{mbId} and mb_pwd = #{mbPwd}
 	</select>
 	
+	<select id="getCouple" resultType="Couple">
+		select * 
+		from couple 
+		where mbid1 = #{mbId} or mbid2 = #{mbId}
+	</select>
+	
+	<select id="getPartner" resultType="Member">
+		select *
+		from member
+		where mb_id = #{partner}
+	</select>
+	
 	<insert id="signUp">
 		insert into member
 		values (#{mbId}, #{mbPwd}, #{mbNickName}, #{profile}, #{birthday})
