@@ -6,90 +6,92 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <style>
-   
-   @font-face {
-       font-family: 'omyu_pretty';
-       src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
-       font-weight: normal;
-       font-style: normal;
-   }
-  
-   body{
-     padding:0;
-     margin:0;
-     font-family: 'omyu_pretty';
-   }
+@font-face {
+	font-family: 'omyu_pretty';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
 
-   .btn {
-     text-align: center;
-     text-transform: uppercase;
-     transition: 0.5s;
-     background-size: 200% auto;
-     color: white;
-     box-shadow: 0 0 20px #eee;
-     border-radius: 10px;
-    }
-   
-   .btn:hover {
-     background-position: right center; /* change the direction of the change here */
-   }
-   
-   .btn-2 {
-     background-image: linear-gradient(to right, #fbc2eb 0%, #a6c1ee 51%, #fbc2eb 100%);
-   }
-   
-   .cpImage {
-      background-image: url("https://images.unsplash.com/photo-1472608127515-7a7e160c6ab9?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
-         height: 80vh;
-         background-size: cover;
-   }
-   
-   .cpName {
-      font-size: 1.5rem;
-   }
-   
+body {
+	padding: 0;
+	margin: 0;
+	font-family: 'omyu_pretty';
+}
+
+.btn {
+	text-align: center;
+	text-transform: uppercase;
+	transition: 0.5s;
+	background-size: 200% auto;
+	color: white;
+	box-shadow: 0 0 20px #eee;
+	border-radius: 10px;
+}
+
+.btn:hover {
+	background-position: right center;
+	/* change the direction of the change here */
+}
+
+.btn-2 {
+	background-image: linear-gradient(to right, #fbc2eb 0%, #a6c1ee 51%, #fbc2eb 100%);
+}
+
+.cpImage {
+	background-image: url("https://images.unsplash.com/photo-1472608127515-7a7e160c6ab9?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+	height: 80vh;
+	background-size: cover;
+}
+
+.cpName {
+	font-size: 1.5rem;
+}
 </style>
 </head>
 
 <body>
 	<div class="justify-content-between d-flex mt-3 mx-2 mb-2">
-    	<img src="/static-image/mainLogo2.jpg" style="width: 200px;"></img>
-    	<div class="login-cont d-flex">
-         	<form action="loginView" method="get">
-            	<button th:if="${session.loginUser == null}" class="btn btn-2">로그인</button>
-         	</form>
-         
-	         <form action="signUpView" method="get">
-	            <button th:if="${session.loginUser == null}" class="btn btn-2 mx-3">회원가입</button>
-	         </form>
-         
-	         <form action="signOut" method="get">
-	            <button th:unless="${session.loginUser == null}" class="btn btn-2">로그아웃</button>
-	         </form>
-      	</div>
-   </div>
-   
-   <!-- 배경화면 -->
-   <div class="cpImage d-flex justify-content-center mx-2">
-      <div class="cpName mt-3">
-         <div class="d-flex justify-content-center" th:if="${session.loginUser != null}">
-            <span>[[${session.loginUser.mbNickName}]]</span>
-            <span>💖</span>
-            <span>[[${session.partner.mbNickName}]]</span>
-         </div>
-         <p>함께한지 100일째</p>
-      </div>
-   </div>
-   
-   <th:block th:unless="${session.loginUser == null}">
-      <h1>회원 정보</h1>
-      <img th:src="'/image/' + ${session.loginUser.profile}" alt="PROFILE_IMAGE" style="width: 100px; height: 100px; border-radius: 100px; border: 1px solid black">
-      <h3>아이디 : [[${session.loginUser.mbId}]]</h3>
-      <h3>닉네임 : [[${session.loginUser.mbNickName}]]</h3>
-      <h3>생년월일 : [[${session.loginUser.birthday}]]</h3>
-   </th:block>
+		<img src="/static-image/mainLogo2.jpg" style="width: 200px;"></img>
+		<div class="login-cont d-flex">
+			<form action="loginView" method="get">
+				<button th:if="${session.loginUser == null}" class="btn btn-2">로그인</button>
+			</form>
+
+			<form action="signUpView" method="get">
+				<button th:if="${session.loginUser == null}" class="btn btn-2 mx-3">회원가입</button>
+			</form>
+
+			<form action="signOut" method="get">
+				<button th:unless="${session.loginUser == null}" class="btn btn-2">로그아웃</button>
+			</form>
+		</div>
+	</div>
+
+	<!-- 배경화면 -->
+	<div class="cpImage d-flex justify-content-center mx-2">
+		<div class="cpName mt-3">
+			<div class="d-flex justify-content-center" th:if="${session.loginUser != null}">
+				<span>[[${session.loginUser.mbNickName}]]</span> <span>💖</span> <span>[[${session.partner.mbNickName}]]</span>
+			</div>
+			<p>함께한지 100일째</p>
+		</div>
+	</div>
+
+	<th:block th:unless="${session.loginUser == null}">
+		<h1>회원 정보</h1>
+		<img th:src="'/image/' + ${session.loginUser.profile}" alt="PROFILE_IMAGE" style="width: 100px; height: 100px; border-radius: 100px; border: 1px solid black">
+		<h3>아이디 : [[${session.loginUser.mbId}]]</h3>
+		<h3>닉네임 : [[${session.loginUser.mbNickName}]]</h3>
+		<h3>생년월일 : [[${session.loginUser.birthday}]]</h3>
+	</th:block>
 	
-	
+	<button onclick="window.location.href='/'">홈</button>
+	<button onclick="window.location.href='/diary'">다이어리</button>
+	<button onclick="window.location.href='/calendar'">달력</button>
+	<button onclick="window.location.href='/notifications'">알림</button>
+
+
 </body>
 </html>
 
