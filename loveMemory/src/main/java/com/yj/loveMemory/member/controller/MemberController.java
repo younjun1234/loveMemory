@@ -44,7 +44,6 @@ public class MemberController {
 		if(loginUser != null) {
 			model.addAttribute("loginUser", loginUser);
 			Couple couple = mService.getCouple(loginUser);
-			System.out.println(couple);
 			
 			// 연인 정보 가져오기
 			Member partner;

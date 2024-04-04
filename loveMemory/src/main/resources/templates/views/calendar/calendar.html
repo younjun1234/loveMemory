@@ -49,7 +49,6 @@ body {
 }
 </style>
 </head>
-
 <body class="bg-dark">
 	<div class="justify-content-between d-flex mt-3 mx-2 mb-2">
 		<img src="/static-image/mainLogo2.jpg" style="width: 200px;"></img>
@@ -67,38 +66,61 @@ body {
 			</form>
 		</div>
 	</div>
-
-	<!-- 배경화면 -->
-	<div class="cpImage d-flex justify-content-center mx-2">
-		<div class="cpName mt-3">
-			<div class="d-flex justify-content-center" th:if="${session.loginUser != null}">
-				<span>[[${session.loginUser.mbNickName}]]</span> <span>💖</span> <span>[[${session.partner.mbNickName}]]</span>
-			</div>
-			<p>함께한지 100일째</p>
-		</div>
-	</div>
-	
-	<div class="text-center h3 m-3 text-white">컬렉션</div>
-	<div style="min-height: 500px;">
-	
-	</div>
-
-	<th:block th:unless="${session.loginUser == null}">
-		<h1>회원 정보</h1>
-		<img th:src="'/image/' + ${session.loginUser.profile}" alt="PROFILE_IMAGE" style="width: 100px; height: 100px; border-radius: 100px; border: 1px solid black">
-		<h3>아이디 : [[${session.loginUser.mbId}]]</h3>
-		<h3>닉네임 : [[${session.loginUser.mbNickName}]]</h3>
-		<h3>생년월일 : [[${session.loginUser.birthday}]]</h3>
-	</th:block>
-	
-	<div class="d-block text-center fixed-bottom p-2">
-		<button class="btn btn-2 m-1" onclick="window.location.href='/'">홈</button>
-		<button class="btn btn-2 m-1" onclick="window.location.href='/diary'">다이어리</button>
-		<button class="btn btn-2 m-1" onclick="window.location.href='/calendar'">달력</button>
-		<button class="btn btn-2 m-1" onclick="window.location.href='/notifications'">알림</button>
-	</div>
-
-
+	<br><br>
+	<table class="table table-bordered text-center m-auto" style="width: 80%;">
+		<thead>
+			<tr>
+				<th class="text-danger">SUN</th>
+				<th>MON</th>
+				<th>TUE</th>
+				<th>WED</th>
+				<th>THU</th>
+				<th>FRI</th>
+				<th class="text-primary">SAT</th>
+			</tr>
+		</thead>
+		<tbody class="text-end">
+		</tbody>
+	</table>
 </body>
+<script>
+	// 달력의 첫날 가져오기
+	const getFirstDay = (month) => {
+		let date = new Date();
+		date.setMonth(month-1);
+		date.setDate(date.getDate()-date.getDay());
+		return date;
+	}
+	
+	
+	// 달력 javascript로 그리기
+	const makeCalendar = (month) => {
+		const date = getFirstDay(month);
+		
+		// 달력 6 줄
+		let calendar = "";
+		for(let i=0; i < 6; i++) {
+			calendar += '<tr style="height: 100px">';
+			for(let j=0; j<7; j++) {
+				if(date.getMonth() + 1 != month) {
+					calendar += '<td class="text-secondary pe-1" style="line-height: .25rem;">';
+				} else {
+					calendar += '<td class="pe-1" style="line-height: .25rem; ">';
+				}
+				calendar += date.getDate() + "</td>";
+				date.setDate(date.getDate() + 1);
+			}
+			calendar += "</tr>";
+		}
+		return calendar;
+	}
+	
+	window.onload = () => {
+		const tbody = document.querySelector('tbody');
+		tbody.innerHTML = makeCalendar(4);
+	}
+	
+	
+</script>
 </html>
 

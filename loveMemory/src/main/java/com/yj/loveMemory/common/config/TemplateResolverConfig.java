@@ -21,4 +21,32 @@ public class TemplateResolverConfig {
 		
 		return member;
 	}
+	
+	@Bean
+	public ClassLoaderTemplateResolver diaryResolver() {
+		ClassLoaderTemplateResolver diary = new ClassLoaderTemplateResolver();
+		diary.setPrefix("templates/views/diary/");
+		diary.setSuffix(".html");
+		diary.setTemplateMode(TemplateMode.HTML);
+		diary.setCharacterEncoding("UTF-8");
+		diary.setOrder(2);
+		diary.setCacheable(false);
+		diary.setCheckExistence(true);
+		
+		return diary;
+	}
+	
+	@Bean
+	public ClassLoaderTemplateResolver calendarResolver() {
+		ClassLoaderTemplateResolver calendar = new ClassLoaderTemplateResolver();
+		calendar.setPrefix("templates/views/calendar/");
+		calendar.setSuffix(".html");
+		calendar.setTemplateMode(TemplateMode.HTML);
+		calendar.setCharacterEncoding("UTF-8");
+		calendar.setOrder(2);
+		calendar.setCacheable(false);
+		calendar.setCheckExistence(true);
+		
+		return calendar;
+	}
 }
