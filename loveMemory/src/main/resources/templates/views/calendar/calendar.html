@@ -5,6 +5,7 @@
 <title>Insert title here</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 <style>
 @font-face {
 	font-family: 'omyu_pretty';
@@ -66,7 +67,17 @@ body {
 			</form>
 		</div>
 	</div>
+	
 	<br><br>
+	<div class="d-flex justify-content-center">
+		<svg onclick="changeCalendar(-1)" xmlns="http://www.w3.org/2000/svg" role="button" width="30" height="30" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+			<path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+		</svg>
+		<div class="text-white h3" id="top-date"></div>
+		<svg onclick="changeCalendar(1)" xmlns="http://www.w3.org/2000/svg" role="button" width="30" height="30" fill="white" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+			<path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+		</svg>
+	</div>
 	<table class="table table-bordered text-center m-auto" style="width: 80%;">
 		<thead>
 			<tr>
@@ -80,14 +91,124 @@ body {
 			</tr>
 		</thead>
 		<tbody class="text-end">
+		 
 		</tbody>
 	</table>
+	
+	<br><br><br><br>
+	
+	<div class="d-block text-center fixed-bottom p-2 bg-white">
+		<!-- 이벤트 추가 -->
+		<div style="width: 80%; display: none;" class="m-auto" id="event-form-modal">
+			<br>
+			<div class="d-flex justify-content-between">
+				<button type="button" class="btn-close" onclick="closeEventForm();"></button>
+				<button type="button" class="btn btn-secondary btn-sm" onclick="">저장</button>
+			</div>
+			
+			<br>
+			
+			<input type="text" class="form-control" placeholder="스케쥴 이름">
+			
+			<br>
+			
+			<div class="border border-black rounded px-3 py-2">
+				<div class="d-flex justify-content-between">
+					종일
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" checked role="switch" id="flexSwitchCheckDefault">
+					</div>
+				</div>
+				<hr class="my-0">
+				<div class="d-flex justify-content-between">
+					시작
+					<input type="date" id="startDate">
+				</div>
+				<hr class="my-0">
+				<div class="d-flex justify-content-between">
+					종료
+					<input type="date" id="endDate">
+				</div>
+			</div>
+			
+			<br>
+			
+			<div class="form-label text-start">반복 스케쥴</div>
+			<div class="d-flex justify-content-around">
+				<div>
+					<input type="radio" id="repeatNone" name="repeat" checked>&nbsp;<label for="repeatNone">없음</label>
+				</div>
+				<div>
+					<input type="radio" id="repeatMonth" name="repeat">&nbsp;<label for="repeatMonth">매월</label>
+				</div>
+				<div>
+					<input type="radio" id="repeatYear" name="repeat">&nbsp;<label for="repeatYear">매년</label>
+				</div>
+			</div>
+			
+			<br>
+			
+			<div class="form-label text-start">멤버</div>
+			<div class="d-flex justify-content-around">
+				<div>
+					<input type="radio" id="mySchedule" checked name="scheduleType">&nbsp;<label for="mySchedule">없음</label>
+				</div>
+				<div>
+					<input type="radio" id="coupleSchedule" name="scheduleType">&nbsp;<label for="coupleSchedule">매월</label>
+				</div>
+			</div>
+			
+			<br>
+			
+			<textarea style="resize: none; width: 100%;">메모</textarea>
+		</div>
+		
+		<!-- 일기 추가 / 이벤트 추가 --> 
+		<div style="width: 80%; display:none;" class="m-auto" id="event-modal">
+			<div class="d-flex justify-content-between">
+				<button type="button" class="btn-close" onclick="closeSlide();"></button>
+				<div id="event-date">2024년 4월 28일</div>
+				<div></div>
+			</div>
+			<br>
+			<div class="d-flex" role="button">
+				<div class="bg-black" style="height:30px; width: 30px; border-radius: 30px;"></div>
+				<div class="me-auto">토끼🐰's Diary</div>
+				<div>일기쓰기 ></div>
+			</div>
+			<br>
+			<div class="d-flex" role="button">
+				<div class="bg-black" style="height:30px; width: 30px; border-radius: 30px;"></div>
+				<div class="me-auto">돼지🐷's Diary</div>
+				<div> ></div>
+			</div>
+			<br>
+			<div class="d-flex" role="button" onclick="openEventForm();">
+				<div>+ 스케쥴 또는 이벤트 추가</div>
+			</div>
+		</div>
+		<button class="btn btn-2 m-1" onclick="window.location.href='/'">홈</button>
+		<button class="btn btn-2 m-1" onclick="window.location.href='/diary'">다이어리</button>
+		<button class="btn btn-2 m-1" onclick="window.location.href='/calendar'">달력</button>
+		<button class="btn btn-2 m-1" onclick="window.location.href='/notifications'">알림</button>
+	</div>
 </body>
 <script>
+	const eventModal = document.getElementById("event-modal");
+	const eventFormModal = document.getElementById("event-form-modal");
+	const eventDate = document.getElementById("event-date");
+	const startDate = document.getElementById("startDate");
+	const endDate = document.getElementById("endDate");
+	const topDate = document.getElementById("top-date");
+	const tbody = document.querySelector('tbody');
+	let formDate = new Date();
+	let calendarDate = new Date();
+
 	// 달력의 첫날 가져오기
 	const getFirstDay = (month) => {
 		let date = new Date();
 		date.setMonth(month-1);
+		date.setDate(1);
 		date.setDate(date.getDate()-date.getDay());
 		return date;
 	}
@@ -96,18 +217,20 @@ body {
 	// 달력 javascript로 그리기
 	const makeCalendar = (month) => {
 		const date = getFirstDay(month);
-		
 		// 달력 6 줄
 		let calendar = "";
 		for(let i=0; i < 6; i++) {
-			calendar += '<tr style="height: 100px">';
+			calendar += '<tr style="min-height: 100px">';
 			for(let j=0; j<7; j++) {
-				if(date.getMonth() + 1 != month) {
-					calendar += '<td class="text-secondary pe-1" style="line-height: .25rem;">';
+				calendar += '<td class="pe-1" onclick="toggleSlide(this);" role="button">';
+				calendar += '<input type="hidden" value="' + date + '">';
+				if (date.getMonth() + 1 != month) {
+					calendar += '<div style="color: grey; line-height: 0.25rem;">' + date.getDate() + '</div>';
 				} else {
-					calendar += '<td class="pe-1" style="line-height: .25rem; ">';
+					calendar += '<div style="line-height: 0.25rem;">' + date.getDate() + '</div>';
 				}
-				calendar += date.getDate() + "</td>";
+				calendar += '<div class="bg-dark-subtle rounded" style="height: 30px; visibility: hidden;"></div><div class="bg-white rounded" style="height: 30px; visibility: hidden;">데이트</div><div class="bg-danger-subtle rounded" style="height: 30px;  visibility: hidden;"></div>';
+				calendar += '</td>'
 				date.setDate(date.getDate() + 1);
 			}
 			calendar += "</tr>";
@@ -115,11 +238,51 @@ body {
 		return calendar;
 	}
 	
-	window.onload = () => {
-		const tbody = document.querySelector('tbody');
-		tbody.innerHTML = makeCalendar(4);
+	const changeCalendar = (change) => {
+		calendarDate.setMonth(calendarDate.getMonth() + change);
+		tbody.innerHTML = makeCalendar(calendarDate.getMonth() + 1);
+		topDate.textContent = calendarDate.getFullYear() + "년 " + (calendarDate.getMonth() + 1) + "월"
 	}
 	
+	window.onload = () => {
+		tbody.innerHTML = makeCalendar(calendarDate.getMonth() + 1);
+		topDate.textContent = calendarDate.getFullYear() + "년 " + (calendarDate.getMonth() + 1) + "월"
+	}
+	
+	const setFormDate = (target) => {
+		const parsedDate = Date.parse(target.firstElementChild.value);
+		const formDate = new Date(parsedDate);
+		eventDate.innerText = formDate.getFullYear() + "년 " + (formDate.getMonth() + 1) + "월 " + (formDate.getDate()) + "일"; 
+	}
+	
+	const toggleSlide = (target) => {
+		if($(eventModal).css('display') == 'none') {
+			openSlide(target);
+		} else {
+			closeSlide();
+		}
+	}
+	
+	const closeSlide = () => {
+		$(eventModal).slideUp();
+	}
+	
+	const openSlide = (target) => {
+		setFormDate(target);
+		$(eventModal).slideDown();
+	}
+	
+	const openEventForm = () => {
+		closeSlide();
+		const dateString = formDate.toISOString().split('T')[0];
+		startDate.value = dateString;
+		endDate.value = dateString;
+		$(eventFormModal).slideDown();
+	}
+	
+	const closeEventForm = () => {
+		$(eventFormModal).slideUp();
+	}
 	
 </script>
 </html>
