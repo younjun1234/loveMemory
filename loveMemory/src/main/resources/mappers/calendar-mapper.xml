@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.loveMemory.calendar.model.dao.CalendarDAO">
+	
+	<insert id="addEvent">
+		insert into event
+		values (event_seq.nextval, #{eventTitle}, #{eventContent}, #{eventType}, #{mbId}
+				, #{eventStartDate}, #{eventEndDate}, #{eventRepeat}, #{allDay}, #{coupleNo))
+	</insert>
+	
+	<select id="getEvents" resultType="Event">
+		select * from event
+		where couple_no = #{coupleNo}
+	</select>
+</mapper>
