@@ -99,16 +99,17 @@ body {
 	
 	<div class="d-block text-center fixed-bottom p-2 bg-white">
 		<!-- 이벤트 추가 -->
-		<div style="width: 80%; display: none;" class="m-auto" id="event-form-modal">
+		<form action="/addEvent" method="post">
+			<div style="width: 80%; display: none;" class="m-auto" id="event-form-modal">
 			<br>
 			<div class="d-flex justify-content-between">
 				<button type="button" class="btn-close" onclick="closeEventForm();"></button>
-				<button type="button" class="btn btn-secondary btn-sm" onclick="">저장</button>
+				<button class="btn btn-secondary btn-sm">저장</button>
 			</div>
 			
 			<br>
 			
-			<input type="text" class="form-control" placeholder="스케쥴 이름">
+			<input type="text" class="form-control" name="eventTitle" placeholder="스케쥴 이름">
 			
 			<br>
 			
@@ -116,18 +117,20 @@ body {
 				<div class="d-flex justify-content-between">
 					종일
 					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" checked role="switch" id="flexSwitchCheckDefault">
+						<input class="form-check-input" name="isAllDay" type="checkbox" checked role="switch" onclick="showTime();">
 					</div>
 				</div>
 				<hr class="my-0">
 				<div class="d-flex justify-content-between">
 					시작
-					<input type="date" id="startDate">
+					<input type="date" id="startDate" name="startDate" class="ms-auto" readonly>
+					<input type="time" id="startTime" name="startTime" style="display: none;">
 				</div>
 				<hr class="my-0">
 				<div class="d-flex justify-content-between">
 					종료
-					<input type="date" id="endDate">
+					<input type="date" id="endDate" name="endDate" class="ms-auto" readonly>
+					<input type="time" id="endTime" name="endTime" style="display: none;">
 				</div>
 			</div>
 			
@@ -136,13 +139,13 @@ body {
 			<div class="form-label text-start">반복 스케쥴</div>
 			<div class="d-flex justify-content-around">
 				<div>
-					<input type="radio" id="repeatNone" name="repeat" checked>&nbsp;<label for="repeatNone">없음</label>
+					<input type="radio" id="repeatNone" name="repeat" checked value="N">&nbsp;<label for="repeatNone">없음</label>
 				</div>
 				<div>
-					<input type="radio" id="repeatMonth" name="repeat">&nbsp;<label for="repeatMonth">매월</label>
+					<input type="radio" id="repeatMonth" name="repeat" value="M">&nbsp;<label for="repeatMonth">매월</label>
 				</div>
 				<div>
-					<input type="radio" id="repeatYear" name="repeat">&nbsp;<label for="repeatYear">매년</label>
+					<input type="radio" id="repeatYear" name="repeat" value="Y">&nbsp;<label for="repeatYear">매년</label>
 				</div>
 			</div>
 			
@@ -151,17 +154,19 @@ body {
 			<div class="form-label text-start">멤버</div>
 			<div class="d-flex justify-content-around">
 				<div>
-					<input type="radio" id="mySchedule" checked name="scheduleType">&nbsp;<label for="mySchedule">없음</label>
+					<input type="radio" id="mySchedule" checked name="scheduleType" value="1">&nbsp;<label for="mySchedule">내 스케쥴</label>
 				</div>
 				<div>
-					<input type="radio" id="coupleSchedule" name="scheduleType">&nbsp;<label for="coupleSchedule">매월</label>
+					<input type="radio" id="coupleSchedule" name="scheduleType" value="2">&nbsp;<label for="coupleSchedule">커플 스케쥴</label>
 				</div>
 			</div>
 			
 			<br>
 			
-			<textarea style="resize: none; width: 100%;">메모</textarea>
+			<textarea style="resize: none; width: 100%;" name="memo">메모</textarea>
 		</div>
+		</form>
+		
 		
 		<!-- 일기 추가 / 이벤트 추가 --> 
 		<div style="width: 80%; display:none;" class="m-auto" id="event-modal">
@@ -173,13 +178,13 @@ body {
 			<br>
 			<div class="d-flex" role="button">
 				<div class="bg-black" style="height:30px; width: 30px; border-radius: 30px;"></div>
-				<div class="me-auto">토끼🐰's Diary</div>
+				<div class="me-auto">[[${session.loginUser.mbNickName}]]'s Diary</div>
 				<div>일기쓰기 ></div>
 			</div>
 			<br>
 			<div class="d-flex" role="button">
 				<div class="bg-black" style="height:30px; width: 30px; border-radius: 30px;"></div>
-				<div class="me-auto">돼지🐷's Diary</div>
+				<div class="me-auto">[[${session.partner.mbNickName}]]'s Diary</div>
 				<div> ></div>
 			</div>
 			<br>
@@ -193,7 +198,7 @@ body {
 		<button class="btn btn-2 m-1" onclick="window.location.href='/notifications'">알림</button>
 	</div>
 </body>
-<script>
+<script th:inline="javascript">
 	const eventModal = document.getElementById("event-modal");
 	const eventFormModal = document.getElementById("event-form-modal");
 	const eventDate = document.getElementById("event-date");
@@ -203,7 +208,12 @@ body {
 	const tbody = document.querySelector('tbody');
 	let formDate = new Date();
 	let calendarDate = new Date();
-
+	const today = new Date();
+	/*<![CDATA[*/
+	const eList = /*[[${eList}]]*/null;
+	/*]]>*/
+	
+	
 	// 달력의 첫날 가져오기
 	const getFirstDay = (month) => {
 		let date = new Date();
@@ -222,14 +232,20 @@ body {
 		for(let i=0; i < 6; i++) {
 			calendar += '<tr style="min-height: 100px">';
 			for(let j=0; j<7; j++) {
-				calendar += '<td class="pe-1" onclick="toggleSlide(this);" role="button">';
+				if (date.getDate() == today.getDate() && date.getMonth() == today.getMonth()  && formDate.getFullYear() == today.getFullYear()) {
+					calendar += '<td class="pe-1 bg-dark-subtle" onclick="toggleSlide(this);" role="button">';
+				} else {
+					calendar += '<td class="pe-1" onclick="toggleSlide(this);" role="button">';
+				}
 				calendar += '<input type="hidden" value="' + date + '">';
 				if (date.getMonth() + 1 != month) {
 					calendar += '<div style="color: grey; line-height: 0.25rem;">' + date.getDate() + '</div>';
 				} else {
 					calendar += '<div style="line-height: 0.25rem;">' + date.getDate() + '</div>';
 				}
-				calendar += '<div class="bg-dark-subtle rounded" style="height: 30px; visibility: hidden;"></div><div class="bg-white rounded" style="height: 30px; visibility: hidden;">데이트</div><div class="bg-danger-subtle rounded" style="height: 30px;  visibility: hidden;"></div>';
+				calendar += '<div class="bg-dark-subtle rounded" style="height: 30px; visibility: hidden;"></div>';
+				calendar += '<div class="bg-white rounded" style="height: 30px; visibility: hidden;"></div>';
+				calendar += '<div class="bg-danger-subtle rounded" style="height: 30px;  visibility: hidden;"></div>';
 				calendar += '</td>'
 				date.setDate(date.getDate() + 1);
 			}
@@ -251,13 +267,57 @@ body {
 	
 	const setFormDate = (target) => {
 		const parsedDate = Date.parse(target.firstElementChild.value);
-		const formDate = new Date(parsedDate);
+		formDate = new Date(parsedDate);
 		eventDate.innerText = formDate.getFullYear() + "년 " + (formDate.getMonth() + 1) + "월 " + (formDate.getDate()) + "일"; 
+	}
+	
+	const setBgColor = (target) => {
+		const tds = document.querySelectorAll("td");
+		for (const td of tds) {
+			if(target == td) {
+				td.classList.add("bg-danger-subtle");
+				td.classList.remove("bg-dark-subtle");
+			}
+		}
+	}
+
+	const removeBgColor = () => {
+		const tds = document.querySelectorAll("td");
+		for (const td of tds) {
+			td.classList.remove("bg-danger-subtle");
+			const parsedDate = Date.parse(td.firstElementChild.value);
+			const tempDate = new Date(parsedDate);
+			if(tempDate.getDate() == today.getDate() && tempDate.getMonth() == today.getMonth() && tempDate.getFullYear() == today.getFullYear()) {
+				td.classList.add("bg-dark-subtle");
+			}
+		}
+	}
+	
+	const showTime  = () => {
+		const times = document.querySelectorAll('input[type="time"]');
+		const dates = document.querySelectorAll('input[type="date"]');
+		for(const time of times) {
+			if($(time).css("display") == "none") {
+				$(time).css("display", "block");
+			} else {
+				$(time).css("display", "none");
+			}
+		}
+		for(const d of dates) {
+			if($(d).prop("readonly") == true) {
+				$(d).removeAttr("readonly");
+			} else {
+				$(d).prop("readonly", true);
+			} 
+				
+			
+		}
 	}
 	
 	const toggleSlide = (target) => {
 		if($(eventModal).css('display') == 'none') {
 			openSlide(target);
+			setBgColor(target);
 		} else {
 			closeSlide();
 		}
@@ -265,6 +325,7 @@ body {
 	
 	const closeSlide = () => {
 		$(eventModal).slideUp();
+		removeBgColor();
 	}
 	
 	const openSlide = (target) => {

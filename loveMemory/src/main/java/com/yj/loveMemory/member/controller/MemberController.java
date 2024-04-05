@@ -56,7 +56,6 @@ public class MemberController {
 			if(partner != null) {
 				model.addAttribute("partner", partner);
 			}
-			System.out.println(partner);
 		}
 		
 		// 연인 프로필 가져오기
