@@ -5,7 +5,7 @@
 	<insert id="addEvent">
 		insert into event
 		values (event_seq.nextval, #{eventTitle}, #{eventContent}, #{eventType}, #{mbId}
-				, #{eventStartDate}, #{eventEndDate}, #{eventRepeat}, #{allDay}, #{coupleNo))
+				, #{eventStartDate}, #{eventEndDate}, #{eventRepeat}, #{allDay}, #{coupleNo})
 	</insert>
 	
 	<select id="getEvents" resultType="Event">
