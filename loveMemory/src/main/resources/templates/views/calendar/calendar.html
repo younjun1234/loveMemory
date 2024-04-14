@@ -104,6 +104,7 @@ body {
 	<div class="d-block text-center fixed-bottom p-2 bg-white">
 		<!-- 이벤트 추가 -->
 		<form action="/addEvent" method="post">
+			<input type="hidden" name="eventNo" id="eventNo" value="0">
 			<div style="width: 80%; display: none;" class="m-auto" id="event-form-modal">
 			<br>
 			<div class="d-flex justify-content-between">
@@ -113,7 +114,7 @@ body {
 			
 			<br>
 			
-			<input type="text" class="form-control" name="eventTitle" placeholder="스케쥴 이름">
+			<input type="text" class="form-control" name="eventTitle" id="eventTitle" placeholder="스케쥴 이름">
 			
 			<br>
 			
@@ -121,7 +122,7 @@ body {
 				<div class="d-flex justify-content-between">
 					종일
 					<div class="form-check form-switch">
-						<input class="form-check-input" name="isAllDay" type="checkbox" checked role="switch" onclick="showTime();">
+						<input class="form-check-input" name="isAllDay" id="isAllDay" type="checkbox" checked role="switch" value="on" onclick="showTime();">
 					</div>
 				</div>
 				<hr class="my-0">
@@ -167,7 +168,7 @@ body {
 			
 			<br>
 			
-			<textarea style="resize: none; width: 100%;" name="memo">메모</textarea>
+			<textarea style="resize: none; width: 100%;" name="memo" id="memo">메모</textarea>
 		</div>
 		</form>
 		
@@ -192,7 +193,7 @@ body {
 				<div> ></div>
 			</div>
 			<br>
-			<div class="d-flex" role="button" onclick="openEventForm();">
+			<div class="d-flex" role="button" onclick="openEventForm(0);">
 				<div>+ 스케쥴 또는 이벤트 추가</div>
 			</div>
 			<br>
@@ -234,19 +235,27 @@ body {
 		for(const e of eList) {
 			const eDate = new Date(e.eventStartDate);
 			if(eDate.getDate() == formDate.getDate() && eDate.getMonth() == formDate.getMonth()) {
-				divs += '<div class="border rounded mb-1" role="button"> \
-							<div class="d-flex"> \
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-date-fill m-3" viewBox="0 0 16 16"> \
-									<path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4zm5.402 9.746c.625 0 1.184-.484 1.184-1.18 0-.832-.527-1.23-1.16-1.23-.586 0-1.168.387-1.168 1.21 0 .817.543 1.2 1.144 1.2"/> \
-									<path d="M16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2m-6.664-1.21c-1.11 0-1.656-.767-1.703-1.407h.683c.043.37.387.82 1.051.82.844 0 1.301-.848 1.305-2.164h-.027c-.153.414-.637.79-1.383.79-.852 0-1.676-.61-1.676-1.77 0-1.137.871-1.809 1.797-1.809 1.172 0 1.953.734 1.953 2.668 0 1.805-.742 2.871-2 2.871zm-2.89-5.435v5.332H5.77V8.079h-.012c-.29.156-.883.52-1.258.777V8.16a13 13 0 0 1 1.313-.805h.632z"/> \
-								</svg> \
-								<div class="p-2"> \
-									<div>'+ e.eventTitle +'</div> \
-									<div>' + formatDate(e.eventStartDate) + '</div> \
+				divs += '<div class="d-flex justify-content-around"> \
+							<div class="border rounded mb-1 col-10" role="button" onClick="openEventForm('+ e.eventNo +')"> \
+								<div class="d-flex"> \
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-date-fill m-3" viewBox="0 0 16 16"> \
+										<path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4zm5.402 9.746c.625 0 1.184-.484 1.184-1.18 0-.832-.527-1.23-1.16-1.23-.586 0-1.168.387-1.168 1.21 0 .817.543 1.2 1.144 1.2"/> \
+										<path d="M16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2m-6.664-1.21c-1.11 0-1.656-.767-1.703-1.407h.683c.043.37.387.82 1.051.82.844 0 1.301-.848 1.305-2.164h-.027c-.153.414-.637.79-1.383.79-.852 0-1.676-.61-1.676-1.77 0-1.137.871-1.809 1.797-1.809 1.172 0 1.953.734 1.953 2.668 0 1.805-.742 2.871-2 2.871zm-2.89-5.435v5.332H5.77V8.079h-.012c-.29.156-.883.52-1.258.777V8.16a13 13 0 0 1 1.313-.805h.632z"/> \
+									</svg> \
+									<div class="p-2"> \
+										<div>'+ e.eventTitle +'</div> \
+										<div>' + formatDate(e.eventStartDate) + '</div> \
+									</div> \
+									<div class="ms-auto m-3">' + formatPeople(e) + '</div> \
 								</div> \
-								<div class="ms-auto m-3">' + formatPeople(e) + '</div> \
+								<div class="text-start mx-3">' + e.eventContent + '</div> \
+							</div>\
+							<div class="my-auto"> \
+								<svg xmlns="http://www.w3.org/2000/svg" onclick="location.href=\'/deleteEvent?eventNo='+ e.eventNo +'\'" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16" role="button"> \
+								  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/> \
+								  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/> \
+								</svg> \
 							</div> \
-							<div class="text-start mx-3">' + e.eventContent + '</div> \
 						</div>';
 			}
 		}
@@ -433,11 +442,61 @@ body {
 	}
 	
 	// 이벤트 슬라이드 열기 
-	const openEventForm = () => {
+	const openEventForm = (eNo) => {
 		closeSlide();
-		const dateString = formDate.toISOString().split('T')[0];
-		startDate.value = dateString;
-		endDate.value = dateString;
+		const eventNo = document.getElementById("eventNo");
+		const eventTitle = document.getElementById("eventTitle");
+		const isAllDay = document.getElementById("isAllDay");
+		const startTime = document.getElementById("startTime");
+		const endTime = document.getElementById("endTime");
+		const repeatNone = document.getElementById("repeatNone");
+		const repeatMonth = document.getElementById("repeatMonth");
+		const repeatYear = document.getElementById("repeatYear");
+		const mySchedule = document.getElementById("mySchedule");
+		const coupleSchedule = document.getElementById("coupleSchedule");
+		const memo = document.getElementById("memo");
+		
+		
+		if(eNo == 0) {
+			eventNo.value  = 0;
+			eventTitle.value = "";
+			isAllDay.checked = true;
+			repeatNone.checked = true;
+			mySchedule.checked = true;
+			memo.value = "메모";
+			
+			const dateString = formDate.toISOString().split('T')[0];
+			startDate.value = dateString;
+			endDate.value = dateString;
+		} else {
+			for(const e of eList) {
+				if(e.eventNo == eNo) {
+					eventNo.value = e.eventNo;
+					eventTitle.value = e.eventTitle;
+					if(e.allDay == "Y") {
+						isAllDay.checked = true;
+					} else {
+						isAllDay.checked = false;
+					}
+					startDate.value = e.eventStartDate.split('T')[0];
+					endDate.value = e.eventEndDate.split('T')[0];
+					if(e.eventRepeat == "N") {
+						repeatNone.checked  = true;
+					} else if (e.eventRepeat == "M") {
+						repeatMonth.checked = true;
+					} else {
+						repeatYear.checked = true;
+					}
+					if(e.eventType == 1) {
+						mySchedule.checked = true;
+					} else {
+						coupleSchedule.checked = true;
+					}
+					memo.value = e.eventContent;
+					
+				}
+			}
+		}
 		$(eventFormModal).slideDown();
 	}
 	
@@ -445,6 +504,8 @@ body {
 	const closeEventForm = () => {
 		$(eventFormModal).slideUp();
 	}
+	
+	
 	
 </script>
 </html>

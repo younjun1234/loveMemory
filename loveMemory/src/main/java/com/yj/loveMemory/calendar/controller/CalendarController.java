@@ -43,9 +43,11 @@ public class CalendarController {
 						   @RequestParam("startTime") String startTime, @RequestParam("endDate") String endDate,
 						   @RequestParam("endTime") String endTime, @RequestParam("repeat") String eventRepeat,
 						   @RequestParam("scheduleType") String eventType, @RequestParam("memo") String eventContent,
-						   @RequestParam(value="isAllDay", defaultValue="off") String allDay, HttpSession session) {
+						   @RequestParam(value="isAllDay", defaultValue="off") String allDay, HttpSession session,
+						   @RequestParam("eventNo") int eventNo) {
 		Date eventStartDate = null;
 		Date eventEndDate = null;
+		int result;
         try {
         	SimpleDateFormat dateTimeformatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         	SimpleDateFormat dateformatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -64,9 +66,28 @@ public class CalendarController {
 		}
         Member loginUser = (Member)session.getAttribute("loginUser");
 		Couple couple = mService.getCouple(loginUser);
-        Event e = new Event(0, eventTitle, eventContent, eventType, loginUser.getMbId(), eventStartDate, eventEndDate, eventRepeat, allDay, couple.getCoupleNo());
-        int result = cService.addEvent(e);
+		System.out.println(allDay);
+		if(allDay.equals("off")) {
+			allDay = "N";
+		} else {
+			allDay = "Y";
+		}
+		System.out.println(allDay);
+        Event e = new Event(eventNo, eventTitle, eventContent, eventType, loginUser.getMbId(), eventStartDate, eventEndDate, eventRepeat, allDay, couple.getCoupleNo());
+        System.out.println(e);
+        if(eventNo == 0) {
+        	result = cService.addEvent(e);
+        } else {
+        	result = cService.updateEvent(e);
+        }
         	
+		
+		return "redirect:/calendar";
+	}
+	
+	@GetMapping("deleteEvent")
+	public String deleteEvent(@RequestParam("eventNo") String eventNo) {
+		int result = cService.deleteEvent(eventNo);
 		
 		return "redirect:/calendar";
 	}

@@ -12,4 +12,8 @@ public interface CalendarService {
 
 	ArrayList<Event> getEvents(Couple couple);
 
+	int updateEvent(Event e);
+
+	int deleteEvent(String eventNo);
+
 }

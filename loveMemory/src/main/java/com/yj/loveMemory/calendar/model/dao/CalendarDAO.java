@@ -14,4 +14,8 @@ public interface CalendarDAO {
 
 	ArrayList<Event> getEvents(Couple couple);
 
+	int updateEvent(Event e);
+
+	int deleteEvent(String eventNo);
+
 }

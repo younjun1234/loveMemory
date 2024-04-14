@@ -17,17 +17,22 @@ public class CalendarServiceImpl implements CalendarService{
 	
 	@Override
 	public int addEvent(Event e) {
-		if(e.getAllDay().equals("on")) {
-			e.setAllDay("Y");
-		} else {
-			e.setAllDay("N");
-		}
 		return cDAO.addEvent(e);
 	}
 
 	@Override
 	public ArrayList<Event> getEvents(Couple couple) {
 		return cDAO.getEvents(couple);
+	}
+
+	@Override
+	public int updateEvent(Event e) {
+		return cDAO.updateEvent(e);
+	}
+
+	@Override
+	public int deleteEvent(String eventNo) {
+		return cDAO.deleteEvent(eventNo);
 	}
 
 }
